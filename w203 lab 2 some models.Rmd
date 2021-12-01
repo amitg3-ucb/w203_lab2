@@ -1,0 +1,96 @@
+---
+title: "Untitled"
+output:
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(ggplot2)
+library(patchwork)
+library(sandwich)
+library(lmtest)
+
+
+
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r}
+tres = read.csv('tres_data2.csv')
+```
+
+```{r}
+# from my excel EDA (which was pretty rough) - some things i thought were logical to look at
+tres_model <- lm(tres$Strength ~ tres$Cement + tres$Slag + tres$Fly.Ash + tres$Water + tres$Age...28.Days + tres$Age...28.Days.1 + tres$Cement.Water + tres$Cement.Coarse.Aggregate + tres$Cement.Fine.Aggregate + tres$Superplasticizer.Cement)
+
+summary(tres_model)
+```
+
+```{r}
+# taking out non-significant variables
+tres_model2 <- lm(tres$Strength ~ tres$Cement + tres$Slag + tres$Fly.Ash + tres$Water + tres$Age...28.Days + tres$Age...28.Days.1 + tres$Cement.Coarse.Aggregate + tres$Cement.Fine.Aggregate)
+
+summary(tres_model2)
+```
+
+```{r}
+# what happens if we remove cement - only look at cement in its relation to coarse/fine aggregate
+tres_model3 <- lm(tres$Strength ~ tres$Slag + tres$Fly.Ash + tres$Water + tres$Age...28.Days + tres$Age...28.Days.1 + tres$Cement.Coarse.Aggregate + tres$Cement.Fine.Aggregate)
+
+summary(tres_model3)
+```
+
+```{r}
+# cement/water instead of water.  almost the same result
+tres_model4 <- lm(tres$Strength ~ tres$Slag + tres$Fly.Ash + tres$Cement.Water + tres$Age...28.Days + tres$Age...28.Days.1 + tres$Cement.Coarse.Aggregate + tres$Cement.Fine.Aggregate)
+
+summary(tres_model4)
+```
+
+```{r}
+# let's go super basic now - only some important-looking ratios and age
+tres_model5 <- lm(tres$Strength ~ tres$Cement.Water + tres$Age...28.Days + tres$Age...28.Days.1 + tres$Cement.Coarse.Aggregate +  tres$Cement.Fine.Aggregate)
+
+summary(tres_model5)
+```
+
+```{r}
+# cement/fine is not significant - let's remove.  .66 adj r2 not bad for 4 variables
+tres_model6 <- lm(tres$Strength ~ tres$Cement.Water + tres$Age...28.Days + tres$Age...28.Days.1 + tres$Cement.Coarse.Aggregate)
+
+summary(tres_model6)
+```
+
+```{r}
+# i do feel like slag is important though...let's add it back.  .74
+tres_model7 <- lm(tres$Strength ~ tres$Cement.Water + tres$Age...28.Days + tres$Age...28.Days.1 + tres$Cement.Coarse.Aggregate + tres$Slag)
+
+summary(tres_model7)
+```
+
+```{r}
+# cement/superplasticizer looked important in my excel EDA but had bad results before.  what if we add it back now?  .7567 looks good 
+tres_model8 <- lm(tres$Strength ~ tres$Cement.Water + tres$Age...28.Days + tres$Age...28.Days.1 + tres$Cement.Coarse.Aggregate + tres$Slag + tres$Superplasticizer.Cement)
+
+summary(tres_model8)
+```
+
+```{r}
+# cement/superplasticizer looks like it has some overlap with cement/coarse agg (but cement/superplasticizer appears to be a stronger predictor.  let's remove cement/coarse agg)  .76 r2 
+tres_model8 <- lm(tres$Strength ~ tres$Cement.Water + tres$Age...28.Days + tres$Age...28.Days.1 + tres$Slag + tres$Superplasticizer.Cement)
+
+summary(tres_model8)
+```
+
+
+for 5 variables I feel like model 8 is pretty good!
