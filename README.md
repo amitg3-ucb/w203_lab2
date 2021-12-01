@@ -1,4 +1,4 @@
-# lab_2
+git remote add origin https://github.com/amitg3-ucb/w203_lab2.git lab_2
 
 
 The final project for MIDS w203. In this lab, students will appply what they have learned about building linear models 
