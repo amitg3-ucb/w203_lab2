@@ -1,0 +1,55 @@
+---
+title: "working file"
+author: "Rebecca Hile"
+subtitle: 'w203: Statistics for Data Science'
+
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r load packages, message = FALSE}
+library(tidyverse)
+library(ggplot2) 
+
+library(sandwich)
+library(stargazer)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r fit a regression model here}
+
+ex_set <- training_data
+model_1 <- lm(ex_set$Strength ~ ex_set$Cement + ex_set$Slag + ex_set$`Fly Ash` + ex_set$Water + ex_set$Superplasticizer + ex_set$`Coarse Aggregate` + ex_set$`Fine Aggregate`+ ex_set$Age )
+model_2 <- lm(ex_set$Strength ~ ex_set$Cement + ex_set$`Log(Cement)` + ex_set$`Cement^2` + ex_set$`Slag/Cement` + ex_set$`Fly Ash/Cement` + ex_set$`Cement/Water` + ex_set$`Superplasticizer/Cement`+ ex_set$`Cement/Coarse Aggregate` + ex_set$`Cement/Fine Aggregate` + ex_set$`Age = 28 Days * Cement` + ex_set$`Age > 28 Days * Cement` + ex_set$`Age = 28 Days * Log(Cement)`+ ex_set$`Age > 28 Days * Log(Cement)` + ex_set$`Age = 28 Days * Cement^2` + ex_set$`Age > 28 Days * Cement^2` + ex_set$`Age = 28 Days * Slag/Cement` + ex_set$`Age > 28 Days * Slag/Cement` + ex_set$`Age = 28 Days * Fly Ash/Cement` + ex_set$`Age > 28 Days * Fly Ash/Cement` + ex_set$`Age = 28 Days * Cement/Water` + ex_set$`Age > 28 Days * Cement/Water` + ex_set$`Age = 28 Days * Superplasticizer/Cement` + ex_set$`Age > 28 Days * Superplasticizer/Cement` + ex_set$`Age = 28 Days * Cement/Coarse Aggregate` + ex_set$`Age > 28 Days * Cement/Coarse Aggregate` + ex_set$`Age = 28 Days * Cement/Fine Aggregate` + ex_set$`Age > 28 Days * Cement/Fine Aggregate` )
+
+model_3 <- lm(ex_set$Strength ~ ex_set$`Age = 28 Days * Cement/Water` + ex_set$`Slag/Cement` + ex_set$`Age > 28 Days * Log(Cement)`+ ex_set$`Superplasticizer/Cement`+ ex_set$`Age = 28 Days * Superplasticizer/Cement` + ex_set$`Log(Cement)`+ ex_set$ `Fly Ash/Cement` + ex_set$`Age = 28 Days * Cement^2` + ex_set$`Age > 28 Days * Slag/Cement`+ ex_set$`Age = 28 Days * Slag/Cement` )
+
+model_4 <- lm(ex_set$Strength ~ ex_set$`Log(Cement)` + ex_set$`Slag/Cement` + ex_set$`Fly Ash/Cement` + ex_set$`Superplasticizer/Cement`+ ex_set$`Age > 28 Days * Cement` + ex_set$`Age = 28 Days * Cement^2` + ex_set$`Age > 28 Days * Cement^2` + ex_set$`Age = 28 Days * Slag/Cement` + ex_set$`Age > 28 Days * Slag/Cement` + ex_set$`Age > 28 Days * Fly Ash/Cement` + ex_set$`Age = 28 Days * Cement/Water` + ex_set$`Age = 28 Days * Superplasticizer/Cement`)
+
+
+model <- stargazer(model_1, model_2, model_3, model_4, type='text', ont.size = "small", align = TRUE,
+          omit.stat=c("f", "ser"),
+          single.row = TRUE,
+          column.sep.width = "-15pt",
+          row.sep.width = "-15pt")
+ 
+```
+
+
+
+
+
+```{r}
+stargazer(model_3, type='text', ont.size = "small", align = TRUE,
+          omit.stat=c("f", "ser"),
+          single.row = TRUE,
+          column.sep.width = "-15pt",
+          row.sep.width = "-15pt")
+```
+
+
